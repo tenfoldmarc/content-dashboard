@@ -94,7 +94,6 @@ git push -u origin main
 
 1. Import the repo at [vercel.com/new](https://vercel.com/new).
 2. Add every environment variable from your `.env.local` in the Vercel project settings.
-   - For `GOOGLE_PRIVATE_KEY`, paste the full key including the `BEGIN`/`END` lines, with `\n` for newlines.
    - Set `NEXT_PUBLIC_APP_URL` to your production URL.
 3. Deploy.
 
