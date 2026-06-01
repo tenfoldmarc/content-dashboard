@@ -13,17 +13,10 @@ async function transcribeFromDrive(fileId: string): Promise<string | null> {
   if (!OPENAI_KEY) return null;
 
   try {
-    const { getGoogleAccessToken } = await import('@/lib/google-auth');
-    const token = await getGoogleAccessToken();
-    if (!token) return null;
-
-    // Download video
-    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) return null;
-
-    const buffer = await res.arrayBuffer();
+    const { downloadFile } = await import('@/lib/drive');
+    const file = await downloadFile(fileId);
+    if (!file) return null;
+    const buffer = file.buffer;
 
     // Transcribe with Whisper
     const formData = new FormData();

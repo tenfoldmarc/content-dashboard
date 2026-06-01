@@ -85,6 +85,15 @@ All personalization lives in `lib/config.ts`, driven by environment variables â€
 
 ---
 
+## Connecting Google Drive (optional)
+
+The publishing queue can pull "ready to post" videos straight from a Google Drive folder. There are two ways to connect it (pick one, both documented in `.env.example`):
+
+- **API key (recommended, easiest):** enable the Google Drive API in Google Cloud, make an API key, and share your videos folder as "Anyone with the link â†’ Viewer". Set `GOOGLE_DRIVE_API_KEY` + `GOOGLE_DRIVE_FOLDER_ID`. No OAuth, no consent screen. The key can only read that public folder, nothing else in your Drive.
+- **OAuth (for private folders):** use a Google OAuth app + refresh token instead (`GMAIL_CLIENT_ID` / `GMAIL_CLIENT_SECRET` / `GMAIL_REFRESH_TOKEN`). The same credential also powers the optional Calendar and Gmail-triage features.
+
+If you skip Drive entirely, every other feature still works.
+
 ## Deploy to Vercel
 
 ```bash

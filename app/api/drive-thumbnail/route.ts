@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getGoogleAccessToken } from '@/lib/google-auth';
+import { getFileMeta, driveMode } from '@/lib/drive';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,27 +15,21 @@ export async function GET(request: Request) {
   if (!fileId) return new NextResponse('Missing fileId', { status: 400 });
 
   try {
-    const token = await getGoogleAccessToken();
-    if (!token) return new NextResponse('No Google access', { status: 502 });
-
-    // 1) Fresh thumbnailLink from Drive metadata
-    const metaRes = await fetch(
-      `https://www.googleapis.com/drive/v3/files/${fileId}?fields=thumbnailLink,hasThumbnail,mimeType&supportsAllDrives=true`,
-      { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store' }
-    );
-    if (!metaRes.ok) return new NextResponse('Drive metadata failed', { status: metaRes.status });
-    const meta = await metaRes.json();
-    let link: string | undefined = meta.thumbnailLink;
+    // 1) Fresh thumbnailLink from Drive metadata (API-key or OAuth mode)
+    const meta = await getFileMeta(fileId, 'thumbnailLink,hasThumbnail,mimeType');
+    if (!meta) return new NextResponse('Drive metadata failed', { status: 502 });
+    let link = meta.thumbnailLink as string | undefined;
     if (!link) return new NextResponse('No thumbnail', { status: 404 });
 
     // Bump the size param Drive appends (e.g. =s220 -> =s400) for a sharper image.
     link = link.replace(/=s\d+$/, '=s400');
 
-    // 2) Fetch the image (with the OAuth token so private files resolve).
-    let imgRes = await fetch(link, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store' });
-    if (!imgRes.ok) {
-      // Some thumbnailLinks reject the auth header — retry without it.
-      imgRes = await fetch(link, { cache: 'no-store' });
+    // 2) Fetch the image. Public-folder thumbnails resolve without auth; for
+    //    private folders (OAuth mode) retry with the bearer token.
+    let imgRes = await fetch(link, { cache: 'no-store' });
+    if (!imgRes.ok && driveMode() === 'oauth') {
+      const token = await getGoogleAccessToken();
+      if (token) imgRes = await fetch(link, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store' });
     }
     if (!imgRes.ok) return new NextResponse('Thumbnail fetch failed', { status: imgRes.status });
 

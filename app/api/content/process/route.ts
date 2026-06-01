@@ -6,7 +6,7 @@ import path from 'path';
 import os from 'os';
 import ffmpegStaticPath from 'ffmpeg-static';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { getGoogleAccessToken } from '@/lib/google-auth';
+import { downloadFile } from '@/lib/drive';
 import { creatorPersona, CREATOR } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
@@ -58,13 +58,7 @@ const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY?.trim();
 const GEMINI_KEY = process.env.GEMINI_API_KEY?.trim();
 
 async function downloadDriveFile(fileId: string): Promise<{ buffer: ArrayBuffer; mimeType: string } | null> {
-  const token = await getGoogleAccessToken();
-  if (!token) return null;
-  const res = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) return null;
-  return { buffer: await res.arrayBuffer(), mimeType: res.headers.get('content-type') || 'video/mp4' };
+  return downloadFile(fileId);
 }
 
 const TRANSCRIBE_PROMPT = `Watch this short-form video and return JSON ONLY (no markdown) in this exact shape:

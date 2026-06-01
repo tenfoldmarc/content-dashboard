@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { getGoogleAccessToken } from '@/lib/google-auth';
+import { verifyFolder, listFolderMedia, downloadFile, type DriveFile } from '@/lib/drive';
 import { DRIVE_FOLDER_ID, DRIVE_CUTOFF_DATE, enabledZernioPlatforms, creatorPersona, CREATOR } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
@@ -33,38 +33,18 @@ async function getVoiceReference(): Promise<string> {
   return cachedVoiceRef;
 }
 
-// ─── Google Drive helpers ───
+// ─── Google Drive helpers (API-key or OAuth mode — see lib/drive.ts) ───
 
 async function verifyDriveFolder(): Promise<boolean> {
-  const token = await getGoogleAccessToken();
-  if (!token) return false;
-  const res = await fetch(`https://www.googleapis.com/drive/v3/files/${DRIVE_FOLDER_ID}?fields=id`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.ok;
+  return verifyFolder(DRIVE_FOLDER_ID);
 }
 
-async function listDriveVideos(): Promise<{ id: string; name: string; mimeType: string; webViewLink: string; thumbnailLink: string; createdTime: string }[]> {
-  const token = await getGoogleAccessToken();
-  if (!token) return [];
-  const cutoffClause = CUTOFF_DATE ? ` and createdTime > '${CUTOFF_DATE}'` : '';
-  const query = `'${DRIVE_FOLDER_ID}' in parents and trashed=false and (mimeType contains 'video/' or mimeType contains 'image/')${cutoffClause}`;
-  const res = await fetch(
-    `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id,name,mimeType,webViewLink,thumbnailLink,createdTime)&orderBy=createdTime desc&pageSize=50`,
-    { headers: { Authorization: `Bearer ${token}` } },
-  );
-  if (!res.ok) return [];
-  return (await res.json()).files || [];
+async function listDriveVideos(): Promise<DriveFile[]> {
+  return listFolderMedia(DRIVE_FOLDER_ID, CUTOFF_DATE || undefined);
 }
 
 async function downloadDriveFile(fileId: string): Promise<{ buffer: ArrayBuffer; mimeType: string } | null> {
-  const token = await getGoogleAccessToken();
-  if (!token) return null;
-  const res = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) return null;
-  return { buffer: await res.arrayBuffer(), mimeType: res.headers.get('content-type') || 'video/mp4' };
+  return downloadFile(fileId);
 }
 
 // ─── Transcribe with Gemini (handles video files up to 2GB natively) ───
