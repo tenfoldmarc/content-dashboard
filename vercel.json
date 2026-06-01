@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/snapshot-platform-stats",
+      "schedule": "0 11 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-my-posts",
+      "schedule": "30 11 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-competitors",
+      "schedule": "0 12 * * *"
+    }
+  ]
+}

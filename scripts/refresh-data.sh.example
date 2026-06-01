@@ -1,0 +1,22 @@
+#!/bin/bash
+# Manually trigger a full data refresh (pull your posts + scrape competitors +
+# generate ideas). In production this runs automatically via Vercel Cron
+# (see vercel.json) — this script is only for kicking it off by hand.
+#
+# Usage:
+#   cp refresh-data.sh.example refresh-data.sh   # then fill in the two vars below
+#   ./refresh-data.sh
+#
+# Both values must match your deployment:
+#   DASHBOARD_URL — your live app URL (no trailing slash)
+#   CRON_SECRET   — the same value you set in your environment variables
+
+DASHBOARD_URL="${DASHBOARD_URL:-https://your-dashboard.vercel.app}"
+CRON_SECRET="${CRON_SECRET:?Set CRON_SECRET in your environment first}"
+
+echo "$(date) — Triggering daily refresh on $DASHBOARD_URL"
+curl -s --max-time 300 \
+  -H "Authorization: Bearer $CRON_SECRET" \
+  "$DASHBOARD_URL/api/cron/daily-refresh"
+echo ""
+echo "$(date) — Done"
