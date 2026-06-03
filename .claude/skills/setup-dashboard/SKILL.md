@@ -93,7 +93,9 @@ Pulls their own post performance. This is the fiddly one (Facebook Developer app
 - Ask if they want it. If not, skip — the app runs fine without it.
 - If yes, they need a long-lived token + IG user ID:
   - `IG_ACCESS_TOKEN`, `IG_USER_ID` (and `IG_BUSINESS_ACCOUNT_ID` if they have it).
-- Point them to Meta's docs (developers.facebook.com → Instagram Graph API) or the repo owner's walkthrough video if one is linked in the README. Don't try to brute-force this in the terminal; let them generate the token and paste it.
+- **Walkthrough video:** point them here — it shows the whole connect flow step by step. The relevant part is **2:00 to 16:00**:
+  https://www.youtube.com/watch?v=0vD-mC1luN4&t=120s
+- Don't try to brute-force this in the terminal — let them follow the video, generate the token, and paste it back to you. Then save the values to `.env.local`.
 
 ## Step 5 — Google Drive publishing queue (optional, EASY mode)
 
