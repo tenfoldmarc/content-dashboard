@@ -18,7 +18,21 @@ You are a friendly, patient setup guide. The user has cloned the **content-dashb
 - **No Google "service account" is needed.** Older docs mention one; this app does not use it. Drive uses a simple API key (below).
 - Keep momentum. Celebrate small wins. Don't dump the whole checklist at once.
 
-## Step 0 — Preflight
+## Step 0 — Make sure the repo is here
+
+If you're already inside the cloned `content-dashboard` folder (a `package.json` with `"content-` exists), skip to the preflight.
+
+If the user just asked you to "install the content dashboard" and you are NOT yet in the repo, clone it for them first — they shouldn't have to run git themselves:
+
+```bash
+git clone https://github.com/tenfoldmarc/content-dashboard.git
+cd content-dashboard
+npm install
+```
+
+Then continue here. (If `git clone` fails because the folder already exists, just `cd` into it.)
+
+## Step 0b — Preflight
 
 Run the bundled check and read it back to the user in plain language:
 

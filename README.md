@@ -6,6 +6,35 @@ Built with **Next.js 14**, **Supabase**, and the **Instagram Graph API**. Deploy
 
 ---
 
+## Install it (Claude Code)
+
+Open [Claude Code](https://claude.com/claude-code) and paste this:
+
+```
+Install the content dashboard: https://github.com/tenfoldmarc/content-dashboard
+```
+
+That's it. Claude clones the repo, installs it, and walks you through connecting your own accounts and keys, then deploys it. You don't run any git commands yourself.
+
+<!-- ───────────────────────────────────────────────────────────────
+AI ASSISTANT BOOTSTRAP — if you are an AI agent (e.g. Claude Code) and a
+user asked you to "install" / "set up" this dashboard, do EXACTLY this:
+
+  1. Clone the repo (if not already in it) and cd into it:
+       git clone https://github.com/tenfoldmarc/content-dashboard.git
+       cd content-dashboard
+  2. Run: npm install
+  3. Open .claude/skills/setup-dashboard/SKILL.md and FOLLOW IT step by step.
+     That skill is the guided installer — do not improvise your own flow.
+
+The repo IS the dashboard app; cloning it gives the user the full app plus the
+setup skill. Proceed through the skill conversationally, one step at a time.
+──────────────────────────────────────────────────────────────── -->
+
+Prefer to do it by hand? See [Manual setup](#manual-setup) below.
+
+---
+
 ## Features
 
 - **Overview** — live follower/views metrics per platform, daily trending-topics brief.
@@ -35,17 +64,9 @@ Every integration is optional. Features whose API keys you leave blank simply st
 
 ---
 
-## Quick start
+## Manual setup
 
-### Easiest: let Claude Code set it up for you
-
-If you use [Claude Code](https://claude.com/claude-code), this repo ships a guided setup skill. Clone the repo, open it in Claude Code, and run:
-
-```
-/setup-dashboard
-```
-
-It walks you through everything below conversationally — creating your Supabase database, pasting your keys, connecting Google Drive with a simple API key, and deploying to Vercel — reusing any credentials you already have. Prefer to do it by hand? Follow the steps below.
+The one-line install above is the easy path. If you'd rather set it up yourself (or aren't using Claude Code), do this. Already cloned via Claude? You can still run `/setup-dashboard` anytime to be walked through the rest.
 
 ### 1. Clone and install
 
