@@ -37,6 +37,16 @@ Every integration is optional. Features whose API keys you leave blank simply st
 
 ## Quick start
 
+### Easiest: let Claude Code set it up for you
+
+If you use [Claude Code](https://claude.com/claude-code), this repo ships a guided setup skill. Clone the repo, open it in Claude Code, and run:
+
+```
+/setup-dashboard
+```
+
+It walks you through everything below conversationally — creating your Supabase database, pasting your keys, connecting Google Drive with a simple API key, and deploying to Vercel — reusing any credentials you already have. Prefer to do it by hand? Follow the steps below.
+
 ### 1. Clone and install
 
 ```bash
